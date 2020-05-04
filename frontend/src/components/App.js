@@ -48,9 +48,9 @@ const App = () => {
                         setPersons(persons.filter(person => person.id !== existingPerson.id));
                       })
             }*/
-            messageClassName = 'error';
+
             SetNotificationMessage(
-                `Information of '${existingPerson.name}' has already been added to server`
+                `Information of '${existingPerson.name}' is already there in the server`
               );
               setTimeout(() => {
                   SetNotificationMessage('');
@@ -68,6 +68,11 @@ const App = () => {
                         SetNotificationMessage('')
                     }, 3000)
                 });
+                HandleRest
+                .getAll()
+                  .then(initialPersons => {
+                      setPersons(initialPersons)
+                })
 
         }
         setNewName('')
@@ -82,6 +87,7 @@ const App = () => {
 
     const [newNumber, setNewNumber] = useState('')
     const onNumberChange = event => setNewNumber(event.target.value)
+    console.log(persons);
 
     const showThesePersons = showAll ? persons : persons.filter(person => person.name.toLowerCase().includes(filterValue.toLowerCase()))
 
