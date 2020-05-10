@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const morgan = require('morgan')
 const app = express();
+const Person = require('./models/person')
 
  app.use(express.json())
  app.use(express.static('build'))
@@ -33,58 +35,57 @@ const generateRandomId = () => Math.floor(Math.random() * 1000000);
 
 
 app.get('/api/persons', (request,response) => {
+Person.find({}).then(persons => {
  response.json(persons);
+})
 })
 
 app.get('/info', (request, response) => {
     const infoResponse  = `
-    <p>PhoneBook has info of ${persons.length} people </p>
+    <p>PhoneBook has info of ${Person.length} people </p>
     <p>${new Date()} <\p>
     `
     response.send(infoResponse)
 })
 
 app.get('/api/persons/:id', (request, response) => {
- const id = Number(request.params.id);
- const person = persons.find(person => person.id === id);
- if(person) {
-     response.json(person);
- } else {
-     response.status(404).end();
- }
+  Person.findById(request.params.id, function(err, person) {
+    if(err) {
+     return response.status(404).end();
+    }
+    response.json(person.toJSON())
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
-    persons = persons.filter(person => person.id !== id);
-    response.status(204).end()
-
+    Person.findByIdAndDelete(request.params.id, function(err){
+      if(err) {
+        return response.status(404).end()
+      }
+      response.status(204).end();
+    })
+    
 })
 
-app.post('/api/persons', (request,response) => {
-  const person = request.body;
-//   console.log(person);
-  const {name, number} = person;
-//   console.log(name);
+app.post('/api/persons', (request, response) => {
+  const body = request.body
 
-  if(!name) {
-      return response.status(404).json({ 
-        error: 'content missing or incorrect content' 
-      });
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
 
-  const personAlreadyExists = persons.find(person => person.name.toLowerCase() === name.toLowerCase())
-//   console.log(personAlreadyExists)
-  if(personAlreadyExists){
-      return response.status(404).json({
-          error: 'name must be unique'
-      })
-  }
+  const person = new Person({
+    name: body.name,
+    number: body.number 
+  })
 
-  person.id = generateRandomId()
-  persons = persons.concat(person);
- response.json(person);
+  person.save().then(savedPerson => {
+    response.json(savedPerson.toJSON())
+    mongoose.connection.close()
+  })
 })
+
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)

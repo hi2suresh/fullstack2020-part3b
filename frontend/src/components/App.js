@@ -87,7 +87,7 @@ const App = () => {
 
     const [newNumber, setNewNumber] = useState('')
     const onNumberChange = event => setNewNumber(event.target.value)
-    console.log(persons);
+    // console.log(persons);
 
     const showThesePersons = showAll ? persons : persons.filter(person => person.name.toLowerCase().includes(filterValue.toLowerCase()))
 

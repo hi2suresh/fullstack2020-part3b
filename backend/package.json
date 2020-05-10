@@ -7,7 +7,7 @@
     "start": "node index.js",
     "test": "\"echo \\\"Error: no test specified\\\" && exit 1\"\"echo \\\"Error: no test specified\\\" && exit 1\"",
     "dev": "nodemon index.js",
-	"build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend/",
+    "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend/",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail"
@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/hi2suresh/fullstack2020-part3#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mongoose": "^5.9.13",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
