@@ -32,14 +32,17 @@ const App = () => {
         event.preventDefault();
         const existingPerson = persons.find(person => person.name === newName);
         if (existingPerson) {
-            /*if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
                 const updatedDetails = { ...existingPerson, number: newNumber }
                 HandleRest.update(existingPerson.id, updatedDetails)
-                    .then(response => setPersons(persons.map(person => person.id === existingPerson.id ? updatedDetails : person)))
+                    .then(response => {
+                        setPersons(persons.map(person => person.id === existingPerson.id ? updatedDetails : person))
+                        SetNotificationMessage(`Updated ${updatedDetails.name} with ${updatedDetails.number}`);
+                    } )
                     .catch((error) => {
                         messageClassName = 'error';
                         SetNotificationMessage(
-                          `Information of '${existingPerson.name}' has already been removed from server`
+                          `Information of '${existingPerson.name}' failed to update`
                         );
                         setTimeout(() => {
                             SetNotificationMessage('');
@@ -47,8 +50,7 @@ const App = () => {
                         }, 4000);
                         setPersons(persons.filter(person => person.id !== existingPerson.id));
                       })
-            }*/
-
+            }
             SetNotificationMessage(
                 `Information of '${existingPerson.name}' is already there in the server`
               );

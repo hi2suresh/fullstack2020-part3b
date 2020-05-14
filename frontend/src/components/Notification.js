@@ -5,9 +5,10 @@ const Notification = ({ message}) => {
         return null
     }
 
+    const messageNotificationClass = message.toLowerCase().includes('add') || message.toLowerCase().includes('update');
     return (
         //Set the class name based on add or error message
-        <div className={message.toLowerCase().includes('add') ? 'note' : 'error'}>
+        <div className={ messageNotificationClass ? 'note' : 'error'}>
             {message}
         </div>
     )
